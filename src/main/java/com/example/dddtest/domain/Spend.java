@@ -11,7 +11,7 @@ public class Spend {
 
 	@Id
 	@GeneratedValue
-	Long id;
+	private Long id;
 
 	LocalDateTime dateTime;
 	BigDecimal amount;
@@ -37,5 +37,9 @@ public class Spend {
 
 	public SpendCategoryId getCategoryId() {
 		return categoryId;
+	}
+
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 }

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 @Component
 public class LocalMessenger<T> {
 
-    static class EventSubscription<T> {
+    private static class EventSubscription<T> {
         private final Consumer<T> subscriber;
         EventSubscription(Consumer<T> consumer) {
             this.subscriber = consumer;
@@ -27,7 +27,7 @@ public class LocalMessenger<T> {
         eventBus.post(event);
     }
 
-    public void subscribe(Consumer<T> actual) {
-        eventBus.register(new EventSubscription<>(actual));
+    public void subscribe(Consumer<T> handler) {
+        eventBus.register(new EventSubscription<>(handler));
     }
 }
