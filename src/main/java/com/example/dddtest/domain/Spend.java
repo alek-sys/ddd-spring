@@ -34,4 +34,8 @@ public class Spend {
 	public void linkToCategory(SpendCategoryId id) {
 		this.categoryId = id;
 	}
+
+	public SpendCategoryId getCategoryId() {
+		return categoryId;
+	}
 }

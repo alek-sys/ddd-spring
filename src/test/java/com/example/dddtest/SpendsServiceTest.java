@@ -9,16 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,10 +38,10 @@ public class SpendsServiceTest {
 
     @Test
     public void shouldUpdateACategory() {
-        service.addSpendToCategory(SpendCategoryId.of("wine"),
+        service.addSpend(SpendCategoryId.of("wine"),
                 new Spend("test", BigDecimal.TEN, LocalDateTime.now()));
 
-        service.addSpendToCategory(SpendCategoryId.of("wine"),
+        service.addSpend(SpendCategoryId.of("wine"),
                 new Spend("test", BigDecimal.ONE, LocalDateTime.now()));
 
         SpendCategory category = spendCategoriesRepository.findById(SpendCategoryId.of("wine")).get();
@@ -55,7 +52,7 @@ public class SpendsServiceTest {
     @Test
     public void shouldCreateASpend() {
         Spend spend = new Spend("test", BigDecimal.TEN.setScale(2), LocalDateTime.now());
-        Long id = service.addSpendToCategory(SpendCategoryId.of("wine"), spend).get();
+        Long id = service.addSpend(SpendCategoryId.of("wine"), spend);
 
         Spend actualSpend = spendsRepository.findById(id).get();
 

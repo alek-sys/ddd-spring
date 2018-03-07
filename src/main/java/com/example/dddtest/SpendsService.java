@@ -1,30 +1,31 @@
 package com.example.dddtest;
 
 import com.example.dddtest.domain.Spend;
-import com.example.dddtest.domain.SpendCategory;
 import com.example.dddtest.domain.SpendCategoryId;
+import com.example.dddtest.domain.events.NewSpendCreated;
+import com.example.dddtest.messaging.LocalMessenger;
+import com.example.dddtest.persistence.SpendsRepository;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Component
 public class SpendsService {
-    private final EntityManager entityManager;
+    private final SpendsRepository spendsRepository;
+    private final LocalMessenger<NewSpendCreated> messenger;
 
-    public SpendsService(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public SpendsService(SpendsRepository entityManager, LocalMessenger<NewSpendCreated> messenger) {
+        this.spendsRepository = entityManager;
+        this.messenger = messenger;
     }
 
     @Transactional
-    public Optional<Long> addSpendToCategory(SpendCategoryId categoryId, Spend spend) {
-        Optional<SpendCategory> category =
-                Optional.ofNullable(entityManager.find(SpendCategory.class, categoryId));
+    public Long addSpend(SpendCategoryId categoryId, Spend spend) {
+        spend.linkToCategory(categoryId);
+        spendsRepository.save(spend);
+        messenger.emit(new NewSpendCreated(LocalDateTime.now(), spend));
 
-        return category
-                .map(c -> c.addSpend(spend))
-                .map(e -> entityManager.merge(e.getNewSpend()))
-                .map(Spend::getId);
+        return spend.getId();
     }
 }
