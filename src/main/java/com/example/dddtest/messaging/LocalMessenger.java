@@ -1,25 +1,10 @@
 package com.example.dddtest.messaging;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
-@Component
 public class LocalMessenger<T> {
-
-    private static class EventSubscription<T> {
-        private final Consumer<T> subscriber;
-        EventSubscription(Consumer<T> consumer) {
-            this.subscriber = consumer;
-        }
-
-        @Subscribe
-        void onEvent(T data) {
-            subscriber.accept(data);
-        }
-    }
 
     private EventBus eventBus = new EventBus();
 
@@ -27,7 +12,14 @@ public class LocalMessenger<T> {
         eventBus.post(event);
     }
 
-    public void subscribe(Consumer<T> handler) {
-        eventBus.register(new EventSubscription<>(handler));
+    public EventSubscription<T> subscribe(Consumer<T> handler) {
+        EventSubscription<T> subscription = new EventSubscription<>(handler);
+        eventBus.register(subscription);
+
+        return subscription;
+    }
+
+    public void unsubscribe(EventSubscription<T> subscription) {
+        eventBus.unregister(subscription);
     }
 }
