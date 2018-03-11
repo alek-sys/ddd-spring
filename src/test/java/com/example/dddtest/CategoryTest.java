@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @SuppressWarnings("ALL")
-public class DddTestApplicationTests {
+public class CategoryTest {
 
 	private SpendCategory wine;
 
