@@ -10,16 +10,6 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class DddTestApplication {
 
-	@Bean
-	public LocalMessenger<NewSpendCreated> spendCreatedLocalMessenger() {
-		return new LocalMessenger<>();
-	}
-
-	@Bean
-	public LocalMessenger<MonthlyBudgetEvent> monthlyBudgetEventLocalMessenger() {
-		return new LocalMessenger<>();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(DddTestApplication.class, args);
 	}

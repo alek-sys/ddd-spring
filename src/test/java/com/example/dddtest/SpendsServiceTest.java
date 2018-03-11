@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,9 +19,8 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class SpendsServiceTest {
+@DataJpaTest
+public class SpendsServiceTest extends ServiceIntegrationTest {
 
     @Autowired
     private SpendCategoriesRepository spendCategoriesRepository;
@@ -28,13 +28,15 @@ public class SpendsServiceTest {
     @Autowired
     private SpendsRepository spendsRepository;
 
-
-    @Autowired
     private SpendsService service;
+
+    private CategoriesService categoriesService;
 
     @Before
     public void setUp() {
         spendCategoriesRepository.save(new SpendCategory("Wine"));
+        service = new SpendsService(spendsRepository, messenger);
+        categoriesService = new CategoriesService(spendCategoriesRepository, messenger);
     }
 
     @Test
@@ -47,7 +49,7 @@ public class SpendsServiceTest {
 
         SpendCategory category = spendCategoriesRepository.findById(SpendCategoryId.of("wine")).get();
 
-        assertThat(category.getTotalSpend()).isEqualTo(BigDecimal.valueOf(11).setScale(2));
+        assertThat(category.getTotalSpend()).isEqualTo(BigDecimal.valueOf(11));
     }
 
     @Test

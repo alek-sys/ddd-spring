@@ -9,9 +9,11 @@ import com.example.dddtest.domain.events.NewSpendCreated;
 import com.example.dddtest.messaging.EventSubscription;
 import com.example.dddtest.messaging.LocalMessenger;
 import com.example.dddtest.persistence.MonthlyBudgetRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -21,18 +23,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class MonthlyBudgetServiceTest {
-
-    @Autowired
-    private LocalMessenger<NewSpendCreated> messenger;
-
-    @Autowired
-    private LocalMessenger<MonthlyBudgetEvent> monthlyBudgetEventLocalMessenger;
+@DataJpaTest
+public class MonthlyBudgetServiceTest extends ServiceIntegrationTest {
 
     @Autowired
     private MonthlyBudgetRepository monthlyBudgetRepository;
+
+    private MonthlyBudgetService service;
+
+    @Before
+    public void createService() {
+        service = new MonthlyBudgetService(monthlyBudgetRepository, messenger);
+    }
 
     @Test
     public void shouldUpdateMonthlyBudget() {
@@ -40,12 +42,12 @@ public class MonthlyBudgetServiceTest {
 
         Spend spend = new Spend("test", BigDecimal.TEN, now);
         NewSpendCreated event = new NewSpendCreated(now, spend);
-        messenger.emit(event);
+        messenger.emit(NewSpendCreated.class, event);
 
         MonthlyBudgetId monthlyBudgetId = MonthlyBudgetId.of(now.getMonth(), (long) now.getYear());
         MonthlyBudget budget = monthlyBudgetRepository.findById(monthlyBudgetId).get();
 
-        assertThat(budget.getTotalSpent()).isEqualTo(BigDecimal.TEN.setScale(2));
+        assertThat(budget.getTotalSpent()).isEqualTo(BigDecimal.TEN);
     }
 
     @Test
@@ -54,17 +56,16 @@ public class MonthlyBudgetServiceTest {
         LocalDateTime now = LocalDateTime.now();
         MonthlyBudgetId budgetId = MonthlyBudgetId.of(now);
         monthlyBudgetRepository.save(new MonthlyBudget(budgetId, BigDecimal.ZERO));
-        MonthlyBudgetService service = new MonthlyBudgetService(monthlyBudgetEventLocalMessenger, monthlyBudgetRepository);
 
-        EventSubscription<MonthlyBudgetEvent> subscription = monthlyBudgetEventLocalMessenger.subscribe(e -> {
-            MonthlyBudgetExceeded event = (MonthlyBudgetExceeded) e;
-            assertThat(event).isEqualTo(new MonthlyBudgetExceeded(BigDecimal.ZERO.setScale(2), BigDecimal.TEN.setScale(2)));
-            triggered.set(true);
-        });
+        messenger.subscribe(
+                MonthlyBudgetEvent.class,
+                e -> {
+                    MonthlyBudgetExceeded event = (MonthlyBudgetExceeded) e;
+                    assertThat(event).isEqualTo(new MonthlyBudgetExceeded(BigDecimal.ZERO, BigDecimal.TEN));
+                    triggered.set(true);
+                });
 
         service.onEvent(new NewSpendCreated(now, new Spend("", BigDecimal.TEN, now)));
         assertThat(triggered.get()).isTrue();
-
-        monthlyBudgetEventLocalMessenger.unsubscribe(subscription);
     }
 }

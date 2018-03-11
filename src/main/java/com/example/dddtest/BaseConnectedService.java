@@ -1,19 +1,26 @@
 package com.example.dddtest;
 
 import com.example.dddtest.messaging.LocalMessenger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 
-abstract class BaseConnectedService<T> {
+abstract class BaseConnectedService {
 
-    @Autowired
-    private LocalMessenger<T> localMessenger;
+    private final LocalMessenger messenger;
 
-    abstract void onEvent(T event);
+    protected BaseConnectedService(LocalMessenger messenger) {
+        this.messenger = messenger;
 
-    @PostConstruct
-    void subscribe() {
-        localMessenger.subscribe(this::onEvent);
+        supportedEvents()
+                .forEach(eventClass -> messenger.subscribe(eventClass, this::onEvent));
+    }
+
+    abstract void onEvent(Object event);
+
+    abstract Collection<Class> supportedEvents();
+
+    <T> void emit(Class<T> clazz, T event) {
+        messenger.emit(clazz, event);
     }
 }

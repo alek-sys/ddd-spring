@@ -1,25 +1,27 @@
 package com.example.dddtest.messaging;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.google.common.eventbus.EventBus;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
-public class LocalMessenger<T> {
+@Component
+public class LocalMessenger {
 
-    private EventBus eventBus = new EventBus();
+    private Multimap<Class, Consumer> events = HashMultimap.create();
 
-    public void emit(T event) {
-        eventBus.post(event);
+    public <T> void emit(Class<T> clazz, T event) {
+        events.get(clazz).forEach(handler -> handler.accept(event));
     }
 
-    public EventSubscription<T> subscribe(Consumer<T> handler) {
-        EventSubscription<T> subscription = new EventSubscription<>(handler);
-        eventBus.register(subscription);
-
-        return subscription;
+    public <T> void subscribe(Class<T> clazz, Consumer<T> handler) {
+        events.put(clazz, handler);
     }
 
-    public void unsubscribe(EventSubscription<T> subscription) {
-        eventBus.unregister(subscription);
+    public void reset() {
+        events.clear();
     }
 }

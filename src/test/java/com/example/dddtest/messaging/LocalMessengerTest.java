@@ -8,10 +8,10 @@ public class LocalMessengerTest {
 
     @Test
     public void emitsEventsToSubscribers() {
-        LocalMessenger<String> messenger = new LocalMessenger<>();
+        LocalMessenger messenger = new LocalMessenger();
 
-        messenger.subscribe(v -> assertThat(v).isEqualTo("hello"));
+        messenger.subscribe(String.class, v -> assertThat(v).isEqualTo("hello"));
 
-        messenger.emit("hello");
+        messenger.emit(String.class, "hello");
     }
 }
