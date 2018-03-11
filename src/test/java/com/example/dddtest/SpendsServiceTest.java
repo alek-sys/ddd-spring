@@ -3,6 +3,7 @@ package com.example.dddtest;
 import com.example.dddtest.domain.Spend;
 import com.example.dddtest.domain.SpendCategory;
 import com.example.dddtest.domain.SpendCategoryId;
+import com.example.dddtest.domain.events.NewSpendCreated;
 import com.example.dddtest.persistence.SpendCategoriesRepository;
 import com.example.dddtest.persistence.SpendsRepository;
 import org.junit.Before;
@@ -30,26 +31,21 @@ public class SpendsServiceTest extends ServiceIntegrationTest {
 
     private SpendsService service;
 
-    private CategoriesService categoriesService;
-
     @Before
     public void setUp() {
         spendCategoriesRepository.save(new SpendCategory("Wine"));
         service = new SpendsService(spendsRepository, messenger);
-        categoriesService = new CategoriesService(spendCategoriesRepository, messenger);
     }
 
     @Test
-    public void shouldUpdateACategory() {
-        service.addSpend(SpendCategoryId.of("wine"),
-                new Spend("test", BigDecimal.TEN, LocalDateTime.now()));
+    public void shouldEmitAnEvent() {
+        Spend spend = new Spend("test", BigDecimal.TEN, LocalDateTime.now());
+
+        messenger.subscribe(NewSpendCreated.class, newSpendCreated ->
+                assertThat(newSpendCreated.getNewSpend()).isEqualTo(spend));
 
         service.addSpend(SpendCategoryId.of("wine"),
-                new Spend("test", BigDecimal.ONE, LocalDateTime.now()));
-
-        SpendCategory category = spendCategoriesRepository.findById(SpendCategoryId.of("wine")).get();
-
-        assertThat(category.getTotalSpend()).isEqualTo(BigDecimal.valueOf(11));
+                spend);
     }
 
     @Test
