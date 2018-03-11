@@ -1,4 +1,4 @@
-package com.example.dddtest;
+package com.example.dddtest.services;
 
 import com.example.dddtest.domain.Spend;
 import com.example.dddtest.domain.SpendCategoryId;

@@ -1,4 +1,4 @@
-package com.example.dddtest;
+package com.example.dddtest.services;
 
 import com.example.dddtest.domain.MonthlyBudget;
 import com.example.dddtest.domain.MonthlyBudgetId;
@@ -23,8 +23,9 @@ public class MonthlyBudgetService extends BaseConnectedService {
         this.budgetRepository = budgetRepository;
     }
 
-    @Transactional@Override
-    void onEvent(Object event) {
+    @Transactional
+    @Override
+    public void onEvent(Object event) {
         final Spend spend = ((NewSpendCreated) event).getNewSpend();
         final MonthlyBudgetId id =
                 MonthlyBudgetId.of(spend.getDateTime());

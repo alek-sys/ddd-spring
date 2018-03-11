@@ -1,4 +1,4 @@
-package com.example.dddtest;
+package com.example.dddtest.services;
 
 import com.example.dddtest.domain.MonthlyBudget;
 import com.example.dddtest.domain.MonthlyBudgetId;
@@ -6,16 +6,11 @@ import com.example.dddtest.domain.Spend;
 import com.example.dddtest.domain.events.MonthlyBudgetEvent;
 import com.example.dddtest.domain.events.MonthlyBudgetExceeded;
 import com.example.dddtest.domain.events.NewSpendCreated;
-import com.example.dddtest.messaging.EventSubscription;
-import com.example.dddtest.messaging.LocalMessenger;
 import com.example.dddtest.persistence.MonthlyBudgetRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -66,6 +61,7 @@ public class MonthlyBudgetServiceTest extends ServiceIntegrationTest {
                 });
 
         service.onEvent(new NewSpendCreated(now, new Spend("", BigDecimal.TEN, now)));
+
         assertThat(triggered.get()).isTrue();
     }
 }
