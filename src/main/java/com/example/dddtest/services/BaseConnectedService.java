@@ -2,10 +2,9 @@ package com.example.dddtest.services;
 
 import com.example.dddtest.messaging.LocalMessenger;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 
-abstract class BaseConnectedService {
+public abstract class BaseConnectedService {
 
     private final LocalMessenger messenger;
 
@@ -16,11 +15,11 @@ abstract class BaseConnectedService {
                 .forEach(eventClass -> messenger.subscribe(eventClass, this::onEvent));
     }
 
-    abstract void onEvent(Object event);
+    protected abstract void onEvent(Object event);
 
-    abstract Collection<Class> supportedEvents();
+    protected abstract Collection<Class> supportedEvents();
 
-    <T> void emit(Class<T> clazz, T event) {
+    protected <T> void emit(Class<T> clazz, T event) {
         messenger.emit(clazz, event);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.dddtest.domain;
+package com.example.dddtest.spends.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,11 +13,11 @@ public class Spend {
 	@GeneratedValue
 	private Long id;
 
-	LocalDateTime dateTime;
+	private LocalDateTime dateTime;
 	BigDecimal amount;
-	String description;
+	private String description;
 
-	SpendCategoryId categoryId;
+	private SpendCategoryId categoryId;
 
 	private Spend() {}
 
@@ -41,5 +41,9 @@ public class Spend {
 
 	public LocalDateTime getDateTime() {
 		return dateTime;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
 	}
 }

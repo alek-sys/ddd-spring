@@ -1,4 +1,4 @@
-package com.example.dddtest.domain;
+package com.example.dddtest.spends.domain;
 
 import lombok.EqualsAndHashCode;
 

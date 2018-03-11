@@ -1,10 +1,10 @@
-package com.example.dddtest.services;
+package com.example.dddtest.spends.integration;
 
-import com.example.dddtest.domain.Spend;
-import com.example.dddtest.domain.SpendCategoryId;
-import com.example.dddtest.domain.events.NewSpendCreated;
+import com.example.dddtest.services.BaseConnectedService;
+import com.example.dddtest.spends.domain.Spend;
+import com.example.dddtest.spends.domain.SpendCategoryId;
+import com.example.dddtest.spends.domain.events.NewSpendCreated;
 import com.example.dddtest.messaging.LocalMessenger;
-import com.example.dddtest.persistence.SpendsRepository;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -31,12 +31,12 @@ public class SpendsService extends BaseConnectedService {
     }
 
     @Override
-    void onEvent(Object event) {
+    protected void onEvent(Object event) {
 
     }
 
     @Override
-    Collection<Class> supportedEvents() {
+    protected Collection<Class> supportedEvents() {
         return Collections.emptyList();
     }
 }

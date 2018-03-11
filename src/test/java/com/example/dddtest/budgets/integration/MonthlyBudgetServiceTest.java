@@ -1,12 +1,12 @@
-package com.example.dddtest.services;
+package com.example.dddtest.budgets.integration;
 
-import com.example.dddtest.domain.MonthlyBudget;
-import com.example.dddtest.domain.MonthlyBudgetId;
-import com.example.dddtest.domain.Spend;
-import com.example.dddtest.domain.events.MonthlyBudgetEvent;
-import com.example.dddtest.domain.events.MonthlyBudgetExceeded;
-import com.example.dddtest.domain.events.NewSpendCreated;
-import com.example.dddtest.persistence.MonthlyBudgetRepository;
+import com.example.dddtest.budgets.domain.MonthlyBudget;
+import com.example.dddtest.budgets.domain.MonthlyBudgetId;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetEvent;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetExceeded;
+import com.example.dddtest.spends.domain.Spend;
+import com.example.dddtest.spends.domain.events.NewSpendCreated;
+import com.example.dddtest.ServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.dddtest.services;
+package com.example.dddtest;
 
 import com.example.dddtest.messaging.LocalMessenger;
 import org.junit.After;
@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public abstract class ServiceIntegrationTest {
 
-    LocalMessenger messenger = new LocalMessenger();
+    protected final LocalMessenger messenger = new LocalMessenger();
 
     @After
     public void setUp() {

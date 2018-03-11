@@ -1,21 +1,21 @@
-package com.example.dddtest.domain;
+package com.example.dddtest.spends.domain;
 
-import com.example.dddtest.domain.events.NewSpendCreated;
+import com.example.dddtest.spends.domain.events.NewSpendCreated;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 public class SpendCategory {
 
 	@EmbeddedId
+	private
 	SpendCategoryId id;
-	String name;
-	BigDecimal total = BigDecimal.ZERO;
+	private String name;
+	private BigDecimal total = BigDecimal.ZERO;
 
 	private SpendCategory() {}
 

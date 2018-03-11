@@ -1,4 +1,4 @@
-package com.example.dddtest.domain.events;
+package com.example.dddtest.budgets.domain.events;
 
 import lombok.Value;
 

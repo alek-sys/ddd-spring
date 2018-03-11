@@ -1,6 +1,6 @@
 package com.example.dddtest.services;
 
-import com.example.dddtest.domain.events.MonthlyBudgetTotalIncreased;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetTotalIncreased;
 import com.example.dddtest.messaging.LocalMessenger;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ public class NotificationService extends BaseConnectedService {
     }
 
     @Override
-    void onEvent(Object event) {
+    protected void onEvent(Object event) {
         if (event instanceof MonthlyBudgetTotalIncreased) {
             MonthlyBudgetTotalIncreased m = (MonthlyBudgetTotalIncreased) event;
             System.out.printf("Oh la la! New total is %s", m.getTotal());
@@ -23,7 +23,7 @@ public class NotificationService extends BaseConnectedService {
     }
 
     @Override
-    Collection<Class> supportedEvents() {
+    protected Collection<Class> supportedEvents() {
         return Collections.singletonList(MonthlyBudgetTotalIncreased.class);
     }
 }

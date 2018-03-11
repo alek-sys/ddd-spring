@@ -1,12 +1,12 @@
-package com.example.dddtest.domain.events;
+package com.example.dddtest.spends.domain.events;
 
-import com.example.dddtest.domain.Spend;
+import com.example.dddtest.spends.domain.Spend;
 
 import java.time.LocalDateTime;
 
 public class NewSpendCreated {
-	private LocalDateTime eventDate;
-	private Spend newSpend;
+	private final LocalDateTime eventDate;
+	private final Spend newSpend;
 
 	public NewSpendCreated(LocalDateTime eventDate, Spend newSpend) {
 		this.eventDate = eventDate;

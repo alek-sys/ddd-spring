@@ -1,8 +1,9 @@
-package com.example.dddtest.domain;
+package com.example.dddtest.budgets.domain;
 
-import com.example.dddtest.domain.events.MonthlyBudgetEvent;
-import com.example.dddtest.domain.events.MonthlyBudgetExceeded;
-import com.example.dddtest.domain.events.MonthlyBudgetTotalIncreased;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetEvent;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetExceeded;
+import com.example.dddtest.budgets.domain.events.MonthlyBudgetTotalIncreased;
+import com.example.dddtest.spends.domain.Spend;
 import org.junit.Test;
 
 import java.math.BigDecimal;

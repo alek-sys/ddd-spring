@@ -1,8 +1,6 @@
-package com.example.dddtest.domain;
+package com.example.dddtest.spends.domain;
 
-import com.example.dddtest.domain.Spend;
-import com.example.dddtest.domain.SpendCategory;
-import com.example.dddtest.domain.events.NewSpendCreated;
+import com.example.dddtest.spends.domain.events.NewSpendCreated;
 import org.junit.Before;
 import org.junit.Test;
 
