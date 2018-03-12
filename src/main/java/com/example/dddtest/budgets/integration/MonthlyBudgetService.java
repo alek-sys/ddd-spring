@@ -7,6 +7,9 @@ import com.example.dddtest.budgets.domain.events.MonthlyBudgetEvent;
 import com.example.dddtest.spends.domain.events.NewSpendCreated;
 import com.example.dddtest.messaging.LocalMessenger;
 import com.example.dddtest.services.BaseConnectedService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -17,6 +20,9 @@ import java.util.Collections;
 public class MonthlyBudgetService extends BaseConnectedService {
 
     private final MonthlyBudgetRepository budgetRepository;
+
+    @Autowired
+    private Processor processor;
 
     public MonthlyBudgetService(MonthlyBudgetRepository budgetRepository, LocalMessenger messenger) {
         super(messenger);
@@ -35,7 +41,7 @@ public class MonthlyBudgetService extends BaseConnectedService {
                 .orElse(new MonthlyBudget(id, MonthlyBudget.DEFAULT_LIMIT));
 
         MonthlyBudgetEvent outputEvent = monthlyBudget.addSpend(spend);
-        this.emit(MonthlyBudgetEvent.class, outputEvent);
+        this.processor.output().send(MessageBuilder.withPayload(outputEvent).build());
 
         budgetRepository.save(monthlyBudget);
     }

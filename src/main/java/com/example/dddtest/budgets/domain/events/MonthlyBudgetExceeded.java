@@ -1,11 +1,16 @@
 package com.example.dddtest.budgets.domain.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MonthlyBudgetExceeded implements MonthlyBudgetEvent {
-    private final BigDecimal limit;
-    private final BigDecimal spend;
+    private BigDecimal limit;
+    private BigDecimal spend;
 }
