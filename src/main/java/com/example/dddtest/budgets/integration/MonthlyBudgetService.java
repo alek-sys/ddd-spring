@@ -1,12 +1,11 @@
 package com.example.dddtest.budgets.integration;
 
-import com.example.dddtest.budgets.domain.MonthlyBudget;
 import com.example.dddtest.budgets.domain.MonthlyBudgetId;
-import com.example.dddtest.spends.domain.Spend;
 import com.example.dddtest.budgets.domain.events.MonthlyBudgetEvent;
-import com.example.dddtest.spends.domain.events.NewSpendCreated;
 import com.example.dddtest.messaging.LocalMessenger;
 import com.example.dddtest.services.BaseConnectedService;
+import com.example.dddtest.spends.domain.Spend;
+import com.example.dddtest.spends.domain.events.NewSpendCreated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.messaging.support.MessageBuilder;
@@ -21,12 +20,12 @@ public class MonthlyBudgetService extends BaseConnectedService {
 
     private final MonthlyBudgetRepository budgetRepository;
 
-    @Autowired
-    private Processor processor;
+    private final Processor processor;
 
-    public MonthlyBudgetService(MonthlyBudgetRepository budgetRepository, LocalMessenger messenger) {
+    public MonthlyBudgetService(MonthlyBudgetRepository budgetRepository, LocalMessenger messenger, Processor processor) {
         super(messenger);
         this.budgetRepository = budgetRepository;
+        this.processor = processor;
     }
 
     @Transactional
@@ -36,14 +35,14 @@ public class MonthlyBudgetService extends BaseConnectedService {
         final MonthlyBudgetId id =
                 MonthlyBudgetId.of(spend.getDateTime());
 
-        MonthlyBudget monthlyBudget = budgetRepository
+        budgetRepository
                 .findById(id)
-                .orElse(new MonthlyBudget(id, MonthlyBudget.DEFAULT_LIMIT));
+                .ifPresent(monthlyBudget -> {
+                    MonthlyBudgetEvent outputEvent = monthlyBudget.addSpend(spend);
+                    this.processor.output().send(MessageBuilder.withPayload(outputEvent).build());
 
-        MonthlyBudgetEvent outputEvent = monthlyBudget.addSpend(spend);
-        this.processor.output().send(MessageBuilder.withPayload(outputEvent).build());
-
-        budgetRepository.save(monthlyBudget);
+                    budgetRepository.save(monthlyBudget);
+                });
     }
 
     @Override

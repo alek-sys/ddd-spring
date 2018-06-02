@@ -11,7 +11,7 @@ public abstract class ServiceIntegrationTest {
     protected final LocalMessenger messenger = new LocalMessenger();
 
     @After
-    public void setUp() {
+    public void setUp() throws Exception {
         messenger.reset();
     }
 }

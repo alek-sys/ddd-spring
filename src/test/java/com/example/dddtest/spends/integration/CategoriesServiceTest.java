@@ -23,7 +23,7 @@ public class CategoriesServiceTest extends ServiceIntegrationTest {
 
     @Override
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         CategoriesService categoriesService =
                 new CategoriesService(spendCategoriesRepository, messenger);
